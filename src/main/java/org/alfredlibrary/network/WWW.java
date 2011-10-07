@@ -74,7 +74,7 @@ final public class WWW {
 			URLConnection connection = url.openConnection();
 			connection.setDoOutput(true);
 			OutputStreamWriter outputStreamWriter = null;
-			
+
 			if (parameters != null) {
 				StringBuilder strParams = new StringBuilder();
 				if (parameters != null) {
@@ -89,20 +89,24 @@ final public class WWW {
 				outputStreamWriter.write(strParams.toString());
 				outputStreamWriter.flush();
 			}
-			
+
 			if (headers != null) {
 				for (String header : headers.keySet()) {
 					connection.setRequestProperty(header, headers.get(header));
 				}
 			}
-			
+
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charset.forName(encode)));
 			String line;
 			StringBuilder result = new StringBuilder();
 			while ((line = bufferedReader.readLine()) != null) {
 				result.append(line);
+				result.append("\n");
 			}
-			outputStreamWriter.close();
+
+			if (outputStreamWriter != null) {
+				outputStreamWriter.close();
+			}
 			bufferedReader.close();
 			return result.toString();
 		} catch (MalformedURLException e) {
@@ -115,7 +119,7 @@ final public class WWW {
 	public static String getContent(String strURL, String encode) {
 		return getContent(strURL, encode, null, null);
 	}
-	
+
 	public static String getContent(String u, Map<String, String> parameters) {
 		return getContent(u, parameters, null);
 	}
